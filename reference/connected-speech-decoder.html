@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Декодер беглой речи — шпаргалка</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .decoder td:first-child { font-family: var(--sans); font-weight: 620; white-space: nowrap; }
+  .decoder td:nth-child(2) { color: var(--ink-faint); }
+  .decoder .heard { color: var(--accent); font-weight: 640; }
+  .play { border: none; background: none; cursor: pointer; color: var(--focus); font-size: .95rem; padding: 0 .2rem; }
+  .play:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<main class="wide">
+  <p class="eyebrow">Справочник · Печатать на одну страницу</p>
+  <h1>Декодер беглой речи</h1>
+  <p class="subtitle">Слышишь слева — записывай справа. Всё, что ломает понимание американских фильмов, на одном листе.</p>
+
+  <p>Носители не произносят слова по отдельности. Безударные слова стягиваются в один
+  нейтральный звук <span class="ipa">ə</span>, конечные согласные выпадают, соседние звуки
+  сливаются. Ты знаешь эти слова — просто в такой форме не узнаёшь. Таблица ниже —
+  словарь для обратного перевода.</p>
+
+  <p class="no-print">Нажми <span class="play">&#9658;</span> рядом с формой, чтобы услышать её.</p>
+
+  <h2>Семья <span class="en">-a</span>: исчезающее <span class="en">have</span> и <span class="en">to</span></h2>
+  <p>Самая доходная группа: одно правило снимает десяток регулярных провалов.
+  В беглой речи <span class="en">have</span> и <span class="en">to</span> после модального
+  глагола схлопываются в безударное <span class="ipa">ə</span>.</p>
+
+  <div class="table-scroll"><table class="decoder">
+    <thead><tr><th>Слышишь</th><th>Механизм</th><th>Записывай</th></tr></thead>
+    <tbody id="t1"></tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>Ловушка.</strong> <span class="en">musta</span> и <span class="en">maya</span>
+    различаются одним безударным гласным, а смысл противоположный: уверенность против
+    догадки. Если гласную не расслышал — решает контекст, не звук.
+  </div>
+
+  <h2>Вопросы: <span class="en">wh-</span> + вспомогательный глагол</h2>
+  <p>Вопросительное слово приклеивает к себе всё, что за ним, и от трёх слов остаётся два слога.</p>
+
+  <div class="table-scroll"><table class="decoder">
+    <thead><tr><th>Слышишь</th><th>Механизм</th><th>Записывай</th></tr></thead>
+    <tbody id="t2"></tbody>
+  </table></div>
+
+  <h2>Ассимиляция: <span class="ipa">d/t</span> + <span class="ipa">j</span></h2>
+  <p>Когда слово кончается на <span class="ipa">d</span> или <span class="ipa">t</span>, а следующее
+  начинается с <span class="en">y</span>, два звука сливаются в один — как в
+  <span class="en">jam</span> или <span class="en">church</span>. Граница слов исчезает физически.</p>
+
+  <div class="table-scroll"><table class="decoder">
+    <thead><tr><th>Слышишь</th><th>Механизм</th><th>Записывай</th></tr></thead>
+    <tbody id="t3"></tbody>
+  </table></div>
+
+  <h2>Элизия: звуки, которые просто исчезают</h2>
+  <p>Конечные <span class="ipa">t</span> и <span class="ipa">d</span> перед согласным пропадают
+  почти всегда. Это не небрежность, а норма произношения.</p>
+
+  <div class="table-scroll"><table class="decoder">
+    <thead><tr><th>Слышишь</th><th>Механизм</th><th>Записывай</th></tr></thead>
+    <tbody id="t4"></tbody>
+  </table></div>
+
+  <h2>Flapping: <span class="ipa">t</span> звучит как <span class="ipa">д</span></h2>
+  <p>Главная примета американского произношения. Между двумя гласными
+  <span class="ipa">t</span> превращается в короткий удар языком, на слух почти неотличимый
+  от русского <span class="ipa">д</span>. Поэтому <span class="en">writer</span> и
+  <span class="en">rider</span> звучат одинаково.</p>
+
+  <div class="table-scroll"><table class="decoder">
+    <thead><tr><th>Слышишь</th><th>Механизм</th><th>Записывай</th></tr></thead>
+    <tbody id="t5"></tbody>
+  </table></div>
+
+  <h2>Как этим пользоваться</h2>
+
+  <div class="card">
+    <p><strong>При просмотре.</strong> Не понял фразу — не отматывай сразу. Сначала спроси
+    себя: «а не схлопнулось ли здесь <span class="en">have</span> или <span class="en">to</span>?»
+    В восьми случаях из десяти ответ да.</p>
+    <p><strong>При тренировке.</strong> Возьми любую строку из таблицы и открой её на
+    <a href="https://youglish.com/" target="_blank" rel="noopener">YouGlish</a> — послушай
+    десять живых примеров подряд. Синтез речи учит распознавать, живые голоса — узнавать.</p>
+    <p><strong>В собственной речи.</strong> Специально имитировать редукции не нужно —
+    достаточно их <em>понимать</em>. Беглость приходит от готовых блоков, а не от подражания звукам.</p>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>Не хватает строки?</strong> Услышал в сериале что-то, чего здесь нет, — скажи мне
+    фразу в чате. Разберу механизм и допишу таблицу.
+  </div>
+
+  <nav class="lesson-nav">
+    <a href="../app/index.html">Панель курса</a>
+    <a href="../lessons/0001-placement-test.html">Урок 1: тест уровня</a>
+    <a href="../GLOSSARY.md">Глоссарий</a>
+    <a href="../RESOURCES.md">Источники</a>
+  </nav>
+</main>
+
+<script src="../assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var DATA = {
+    t1: [
+      ["musta",   "must have",   "must have",   "He musta left already."],
+      ["shoulda", "should have", "should have", "You shoulda told me."],
+      ["coulda",  "could have",  "could have",  "It coulda been worse."],
+      ["woulda",  "would have",  "would have",  "I woulda gone with you."],
+      ["hafta",   "have to",     "have to",     "We hafta leave now."],
+      ["gotta",   "got to",      "have got to", "I gotta run."],
+      ["gonna",   "going to",    "going to",    "It's gonna rain."],
+      ["wanna",   "want to",     "want to",     "Do you wanna come?"],
+      ["oughta",  "ought to",    "ought to",    "You oughta see this."],
+      ["I'd've",  "I would have","I would have","I'd've called you."]
+    ],
+    t2: [
+      ["whaddaya",  "what do / are you", "what do you", "Whaddaya think?"],
+      ["whatcha",   "what are you",      "what are you","Whatcha doing?"],
+      ["howdya",    "how do you",        "how do you",  "Howdya know that?"],
+      ["wheredja",  "where did you",     "where did you","Wheredja go?"],
+      ["whydja",    "why did you",       "why did you", "Whydja say that?"],
+      ["I'ma",      "I am going to",     "I'm going to","I'ma head out."]
+    ],
+    t3: [
+      ["didja",  "did + you",   "did you",   "Didja see that?"],
+      ["couldja","could + you", "could you", "Couldja help me?"],
+      ["wouldja","would + you", "would you", "Wouldja mind?"],
+      ["wonchu", "won't + you", "won't you", "Wonchu join us?"],
+      ["gotcha", "got + you",   "got you",   "Gotcha covered."],
+      ["betcha", "bet + you",   "bet you",   "Betcha didn't know."]
+    ],
+    t4: [
+      ["dunno",     "don't know → выпал t",   "don't know",  "I dunno, honestly."],
+      ["aroun'",    "выпал конечный d",       "around",      "It was aroun' midnight."],
+      ["nex' day",  "выпал конечный t",       "next day",    "See you nex' day."],
+      ["ol' man",   "выпал конечный d",       "old man",     "That ol' man again."],
+      ["prolly",    "стянулось probably",     "probably",    "Prolly not today."],
+      ["lemme",     "let + me слиплись",      "let me",      "Lemme check."],
+      ["gimme",     "give + me слиплись",     "give me",     "Gimme a sec."],
+      ["kinda",     "kind of",                "kind of",     "It's kinda late."],
+      ["sorta",     "sort of",                "sort of",     "Sorta works."],
+      ["a lotta",   "a lot of",               "a lot of",    "That's a lotta work."]
+    ],
+    t5: [
+      ["wader",   "water — t между гласными",  "water",     "Can I get some water?"],
+      ["bedder",  "better — t между гласными", "better",     "That's much better."],
+      ["ledder",  "letter — t между гласными", "letter",     "I got your letter."],
+      ["gedit",   "get it — t связалось",      "get it",     "I don't get it."],
+      ["lodda",   "lot of — t между гласными", "lot of",     "There's a lot of them."],
+      ["whadever","whatever — t между гласными","whatever",  "Yeah, whatever."]
+    ]
+  };
+
+  Object.keys(DATA).forEach(function (id) {
+    var tb = document.getElementById(id);
+    if (!tb) return;
+    DATA[id].forEach(function (r) {
+      var heard = r[0], mech = r[1], write = r[2], ex = r[3];
+      var tr = document.createElement('tr');
+
+      var td1 = document.createElement('td');
+      td1.innerHTML = '<span class="heard">' + EN.esc(heard) + '</span>';
+      var btn = document.createElement('button');
+      btn.className = 'play no-print';
+      btn.type = 'button';
+      btn.innerHTML = '&#9658;';
+      btn.title = 'Прослушать';
+      btn.addEventListener('click', function () { EN.tts.speak(ex, { rate: 1 }); });
+      td1.appendChild(btn);
+
+      var td2 = document.createElement('td');
+      td2.textContent = mech;
+
+      var td3 = document.createElement('td');
+      td3.innerHTML = '<b>' + EN.esc(write) + '</b><br>' +
+        '<span style="font-size:.86rem;color:var(--ink-faint)">' + EN.esc(ex) + '</span> ' +
+        '<a class="no-print" style="font-size:.8rem" target="_blank" rel="noopener" href="' +
+        EN.youglish(write) + '">живые примеры &rarr;</a>';
+
+      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+      tb.appendChild(tr);
+    });
+  });
+})();
+</script>
+</body>
+</html>

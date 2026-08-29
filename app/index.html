@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Панель курса — Conversational English</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<main class="wide">
+  <p class="eyebrow">Conversational English</p>
+  <h1>Панель курса</h1>
+  <p class="subtitle">Твой уровень, твои ошибки, что повторять сегодня.</p>
+
+  <div id="empty" hidden>
+    <div class="callout">
+      <strong>Прогресса пока нет.</strong> Начни с теста уровня — без него уроки строить не на чем.
+    </div>
+    <div class="btn-row">
+      <a class="btn primary big" href="../lessons/0001-placement-test.html">Пройти тест уровня</a>
+    </div>
+    <p style="margin-top:2rem">Если ты уже проходил тест в другом браузере — вставь сюда
+      сохранённый JSON и нажми «Загрузить».</p>
+    <textarea id="import-empty" placeholder="Вставь содержимое profile.json"></textarea>
+    <div class="btn-row"><button class="btn" id="do-import-empty" type="button">Загрузить</button></div>
+  </div>
+
+  <div id="dash" hidden>
+
+    <h2>Профиль уровня</h2>
+    <div id="levels"></div>
+
+    <h2>Сегодня к повторению</h2>
+    <div id="due"></div>
+
+    <h2>Слабые места</h2>
+    <p>Ошибки, сгруппированные по механизму. Это очередь работ: чем длиннее полоса,
+      тем раньше механизм попадёт в урок.</p>
+    <div id="tags"></div>
+
+    <h2>Уроки</h2>
+    <div id="lessons"></div>
+
+    <h2>История занятий</h2>
+    <div id="history"></div>
+
+    <h2>Передать прогресс преподавателю</h2>
+    <p>Браузер — рабочая копия. Чтобы я построил следующий урок на твоих реальных ошибках,
+      скопируй прогресс и вставь его в чат. Делай это после каждого занятия.</p>
+    <div class="btn-row">
+      <button class="btn primary" id="copy" type="button">Скопировать прогресс</button>
+      <button class="btn" id="dl" type="button">Скачать profile.json</button>
+      <button class="btn" id="toggle-import" type="button">Загрузить из файла</button>
+      <button class="btn" id="reset" type="button">Сбросить всё</button>
+    </div>
+    <p id="msg" style="color:var(--good);font-weight:600"></p>
+    <div id="import-box" hidden>
+      <textarea id="import" placeholder="Вставь содержимое profile.json"></textarea>
+      <div class="btn-row"><button class="btn" id="do-import" type="button">Загрузить</button></div>
+    </div>
+
+    <div class="ask-teacher">
+      <strong>Как со мной работать.</strong> Открой чат с Клодом в этой папке и скажи, например:
+      «вот мой прогресс, сделай следующий урок», «дай урок только по <span class="en">-a</span>-формам»,
+      «я вчера смотрел серию и не понял вот эту фразу — разбери» или просто «продолжаем».
+      Я прочитаю твои ошибки и соберу следующее занятие под них.
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="../reference/connected-speech-decoder.html">Декодер беглой речи</a>
+      <a href="../MISSION.md">Цель курса</a>
+      <a href="../GLOSSARY.md">Глоссарий</a>
+      <a href="../RESOURCES.md">Источники</a>
+      <a href="https://youglish.com/" target="_blank" rel="noopener">YouGlish</a>
+    </nav>
+  </div>
+</main>
+
+<script src="../assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var LESSONS = [
+    { file: '0001-placement-test.html', title: 'Где ты на самом деле', sub: 'Тест уровня: аудирование, связная речь, словарь, идиомы, речь.' }
+  ];
+
+  var d = EN.store.get();
+  var started = !!d.placement || (d.sessions && d.sessions.length);
+
+  document.getElementById('empty').hidden = started;
+  document.getElementById('dash').hidden = !started;
+
+  function bar(ratio) {
+    return '<div class="progress" style="margin:.35rem 0 0"><i style="width:' +
+      Math.round(ratio * 100) + '%"></i></div>';
+  }
+
+  /* --- Профиль уровня --- */
+
+  if (started && d.placement) {
+    var p = d.placement, s = p.scores || {}, lv = p.levels || {};
+    var rows = [
+      ['Аудирование', s.listening, lv.listening, 'Вытащить знакомое слово из слитного потока'],
+      ['Связная речь', s.reductions, lv.reductions, 'Узнать сжатые формы на слух'],
+      ['Словарь', s.vocabulary, lv.vocabulary, 'Разговорная лексика'],
+      ['Идиомы', s.idioms, lv.idioms, 'Знакомые слова, другой смысл']
+    ];
+    var html = '<div class="table-scroll"><table><thead><tr><th>Навык</th><th>Уровень</th><th>Результат</th><th></th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      if (r[1] == null) return;
+      html += '<tr><td><b>' + r[0] + '</b><br><span style="font-size:.84rem;color:var(--ink-faint)">' + r[3] + '</span></td>' +
+        '<td><span class="tag lvl">' + (r[2] || '—') + '</span></td>' +
+        '<td style="min-width:9rem">' + Math.round(r[1] * 100) + '%' + bar(r[1]) + '</td><td></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    if (s.wordsPerMinute) {
+      html += '<p>Темп речи: <b>' + s.wordsPerMinute + ' слов/мин</b> (у носителей в разговоре 120–150).';
+      if (s.intelligibility != null) html += ' Разборчивость: <b>' + Math.round(s.intelligibility * 100) + '%</b>.';
+      html += '</p>';
+    }
+    html += '<p style="font-size:.86rem;color:var(--ink-faint)">Тест пройден ' +
+      new Date(p.date).toLocaleDateString('ru-RU') + '. Пересдать имеет смысл через месяц занятий.</p>';
+    document.getElementById('levels').innerHTML = html;
+  } else if (started) {
+    document.getElementById('levels').innerHTML =
+      '<p>Тест уровня ещё не пройден. <a href="../lessons/0001-placement-test.html">Пройти сейчас</a>.</p>';
+  }
+
+  /* --- К повторению --- */
+
+  if (started) {
+    var due = EN.srs.due();
+    var dueHtml;
+    if (!due.length) {
+      dueHtml = '<p>На сегодня ничего не назначено. Всё пройденное лежит в очереди и вернётся позже — ' +
+        'интервалы растут: день, три, неделя, две.</p>';
+    } else {
+      dueHtml = '<p>Материала к повторению: <b>' + due.length + '</b>. ' +
+        'Скажи мне «давай повторение», и я соберу из этого короткий прогон.</p>' +
+        '<div class="card">';
+      due.slice(0, 12).forEach(function (x) {
+        dueHtml += '<div style="padding:.25rem 0;border-bottom:1px solid var(--rule)">' +
+          '<span class="en">' + EN.esc(x.text || x.id) + '</span> ' +
+          (x.tags || []).map(function (t) { return '<span class="tag">' + t + '</span>'; }).join(' ') +
+          '</div>';
+      });
+      if (due.length > 12) dueHtml += '<p style="margin:.6rem 0 0;color:var(--ink-faint)">…и ещё ' + (due.length - 12) + '</p>';
+      dueHtml += '</div>';
+    }
+    document.getElementById('due').innerHTML = dueHtml;
+  }
+
+  /* --- Слабые места --- */
+
+  if (started) {
+    var byTag = EN.store.errorsByTag();
+    var names = {
+      reduction: 'Редукции — гласные схлопываются',
+      elision: 'Элизия — звуки выпадают',
+      assimilation: 'Ассимиляция — звуки сливаются',
+      linking: 'Линкинг — граница слов исчезает',
+      contraction: 'Стяжения',
+      perfect: 'Перфектные формы на слух',
+      conditional: 'Условные конструкции на слух',
+      vocab: 'Разговорная лексика',
+      idiom: 'Идиомы',
+      phrasal: 'Фразовые глаголы',
+      pronunciation: 'Произношение',
+      fluency: 'Беглость речи',
+      untagged: 'Без категории'
+    };
+    var keys = Object.keys(byTag).sort(function (a, b) { return byTag[b].length - byTag[a].length; });
+    if (!keys.length) {
+      document.getElementById('tags').innerHTML = '<p>Ошибок пока не зафиксировано.</p>';
+    } else {
+      var max = byTag[keys[0]].length;
+      var th = '<div class="card">';
+      keys.forEach(function (k) {
+        var n = byTag[k].length;
+        th += '<div style="margin:0 0 .8rem">' +
+          '<div style="display:flex;justify-content:space-between;font-family:var(--sans);font-size:.9rem">' +
+          '<span>' + (names[k] || k) + '</span><span style="color:var(--ink-faint)">' + n + '</span></div>' +
+          bar(n / max) + '</div>';
+      });
+      th += '</div>';
+      document.getElementById('tags').innerHTML = th;
+    }
+  }
+
+  /* --- Уроки --- */
+
+  if (started) {
+    var doneSet = {};
+    (d.sessions || []).forEach(function (s) { doneSet[s.lesson] = s; });
+    var lh = '<div class="card">';
+    LESSONS.forEach(function (L) {
+      var key = L.file.replace('.html', '');
+      var s = doneSet[key];
+      lh += '<div style="padding:.6rem 0;border-bottom:1px solid var(--rule)">' +
+        '<a href="../lessons/' + L.file + '"><b>' + L.title + '</b></a> ' +
+        (s ? '<span class="tag" style="color:var(--good);border-color:var(--good)">пройден</span>' : '<span class="tag">не начат</span>') +
+        '<br><span style="font-size:.88rem;color:var(--ink-faint)">' + L.sub + '</span></div>';
+    });
+    lh += '<p style="margin:.9rem 0 0;color:var(--ink-faint);font-size:.9rem">' +
+      'Следующие уроки появляются здесь после того, как я разберу твой прогресс.</p></div>';
+    document.getElementById('lessons').innerHTML = lh;
+  }
+
+  /* --- История --- */
+
+  if (started) {
+    var hh = '';
+    if (!(d.sessions || []).length) hh = '<p>Занятий пока не было.</p>';
+    else {
+      hh = '<div class="table-scroll"><table><thead><tr><th>Дата</th><th>Урок</th><th>Результат</th></tr></thead><tbody>';
+      d.sessions.slice().reverse().forEach(function (s) {
+        hh += '<tr><td>' + new Date(s.date).toLocaleString('ru-RU') + '</td>' +
+          '<td>' + EN.esc(s.lesson) + '</td>' +
+          '<td>' + (s.score != null ? Math.round(s.score * 100) + '%' : '—') + '</td></tr>';
+      });
+      hh += '</tbody></table></div>';
+    }
+    document.getElementById('history').innerHTML = hh;
+  }
+
+  /* --- Экспорт / импорт --- */
+
+  function msg(t, bad) {
+    var m = document.getElementById('msg');
+    if (!m) return;
+    m.textContent = t;
+    m.style.color = bad ? 'var(--bad)' : 'var(--good)';
+  }
+
+  function bind(id, fn) { var e = document.getElementById(id); if (e) e.addEventListener('click', fn); }
+
+  bind('copy', function () {
+    var json = EN.store.exportJSON();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(json).then(
+        function () { msg('Скопировано. Вставь в чат с Клодом.'); },
+        function () { msg('Не удалось. Нажми «Скачать profile.json».', true); }
+      );
+    } else {
+      msg('Буфер обмена недоступен. Нажми «Скачать profile.json».', true);
+    }
+  });
+
+  bind('dl', function () {
+    var blob = new Blob([EN.store.exportJSON()], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'profile.json';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    msg('Сохранено. Положи файл в папку progress/ репозитория.');
+  });
+
+  bind('toggle-import', function () {
+    var b = document.getElementById('import-box');
+    b.hidden = !b.hidden;
+  });
+
+  function doImport(sourceId) {
+    return function () {
+      try {
+        EN.store.importJSON(document.getElementById(sourceId).value);
+        location.reload();
+      } catch (e) {
+        msg('Не получилось: ' + e.message, true);
+        alert('Не получилось загрузить: ' + e.message);
+      }
+    };
+  }
+  bind('do-import', doImport('import'));
+  bind('do-import-empty', doImport('import-empty'));
+
+  bind('reset', function () {
+    if (!confirm('Удалить весь прогресс из этого браузера? Действие необратимо.\n\nСначала лучше скачать profile.json.')) return;
+    EN.store.reset();
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

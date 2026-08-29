@@ -1,0 +1,350 @@
+/* ===========================================================================
+   course.css — общий стиль курса.
+   Каждый урок подключает этот файл. Правь здесь — меняется весь курс.
+   =========================================================================== */
+
+:root {
+  --ink:        #14110d;
+  --ink-soft:   #4a443c;
+  --ink-faint:  #857c70;
+  --paper:      #fdfbf6;
+  --paper-warm: #f5f1e6;
+  --rule:       #e0d8c6;
+  --accent:     #9a3b1f;   /* охра — заголовки, акценты */
+  --accent-dim: #c9704f;
+  --good:       #2f6b3f;
+  --good-bg:    #e8f2e6;
+  --bad:        #9c2b2b;
+  --bad-bg:     #f7e6e4;
+  --focus:      #1f5a8a;
+  --focus-bg:   #e6eef5;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+           Georgia, "Times New Roman", serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+           "Helvetica Neue", Arial, sans-serif;
+  --mono:  "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --measure: 34rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:        #eae4d8;
+    --ink-soft:   #b6ad9d;
+    --ink-faint:  #82796b;
+    --paper:      #16150f;
+    --paper-warm: #201e17;
+    --rule:       #38342a;
+    --accent:     #e08a63;
+    --accent-dim: #c07a55;
+    --good:       #7fc48d;
+    --good-bg:    #1d2a1f;
+    --bad:        #e58b83;
+    --bad-bg:     #2c1c1a;
+    --focus:      #8ab6d9;
+    --focus-bg:   #16232c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 3rem 1.5rem 6rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+main, .wrap { max-width: var(--measure); margin: 0 auto; }
+.wide { max-width: 52rem; margin: 0 auto; }
+
+/* --- Типографика ---------------------------------------------------------- */
+
+h1, h2, h3, .eyebrow, .btn, .tag, table, .ui { font-family: var(--sans); }
+
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  font-weight: 640;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+}
+
+h2 {
+  font-size: 1.15rem;
+  font-weight: 640;
+  letter-spacing: -0.01em;
+  margin: 3rem 0 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+h3 { font-size: 1rem; font-weight: 620; margin: 1.8rem 0 0.5rem; }
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 620;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.7rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin: 0 0 2rem;
+}
+
+p { margin: 0 0 1.05rem; }
+a { color: var(--focus); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+em.en, .en {
+  font-style: normal;
+  font-family: var(--sans);
+  font-weight: 560;
+}
+
+code, .ipa, kbd {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--paper-warm);
+  padding: 0.1em 0.36em;
+  border-radius: 3px;
+}
+
+.ipa { color: var(--accent); background: none; padding: 0; }
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 2px solid var(--accent-dim);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* Сноска на полях — в духе Tufte. На узком экране становится обычным блоком. */
+.aside {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  border-left: 2px solid var(--rule);
+  padding-left: 0.9rem;
+  margin: 1.4rem 0;
+}
+
+@media (min-width: 1180px) {
+  .aside {
+    position: absolute;
+    left: calc(50% + var(--measure) / 2 + 2.2rem);
+    width: 15rem;
+    margin-top: -0.4rem;
+    border-left: none;
+    padding-left: 0;
+  }
+  .aside::before {
+    content: "";
+    display: block;
+    width: 1.6rem;
+    border-top: 1px solid var(--rule);
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* --- Блоки ---------------------------------------------------------------- */
+
+.card {
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.15rem 1.3rem;
+  margin: 1.4rem 0;
+}
+
+.card > :first-child { margin-top: 0; }
+.card > :last-child  { margin-bottom: 0; }
+
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--paper-warm);
+  padding: 0.9rem 1.1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1.4rem 0;
+  font-size: 0.96rem;
+}
+
+.callout strong { color: var(--accent); }
+
+/* --- Кнопки и элементы управления ----------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 560;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.06s;
+  font-family: var(--sans);
+}
+
+.btn:hover:not(:disabled) { background: var(--paper-warm); border-color: var(--accent-dim); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.42; cursor: not-allowed; }
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn.primary:hover:not(:disabled) { background: var(--accent-dim); border-color: var(--accent-dim); }
+
+.btn.big { font-size: 1rem; padding: 0.7rem 1.4rem; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center; margin: 1rem 0; }
+
+input[type="text"], textarea, select {
+  font-family: var(--sans);
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+input[type="text"]:focus, textarea:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+textarea { min-height: 6rem; resize: vertical; line-height: 1.5; }
+
+/* --- Варианты ответа ------------------------------------------------------ */
+
+.choices { display: grid; gap: 0.5rem; margin: 1rem 0; }
+
+.choice {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 0.97rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.choice:hover:not(:disabled) { border-color: var(--accent-dim); background: var(--paper-warm); }
+.choice:disabled { cursor: default; }
+.choice.correct  { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 560; }
+.choice.wrong    { background: var(--bad-bg);  border-color: var(--bad);  color: var(--bad); }
+
+/* --- Обратная связь ------------------------------------------------------- */
+
+.feedback {
+  margin: 0.9rem 0 0;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-size: 0.93rem;
+  font-family: var(--sans);
+  line-height: 1.55;
+}
+.feedback.ok   { background: var(--good-bg); color: var(--good); border: 1px solid var(--good); }
+.feedback.no   { background: var(--bad-bg);  color: var(--bad);  border: 1px solid var(--bad); }
+.feedback.info { background: var(--focus-bg); color: var(--focus); border: 1px solid var(--focus); }
+.feedback b { font-weight: 640; }
+
+/* Слово в разборе диктанта */
+.w      { padding: 0 0.12em; border-radius: 2px; }
+.w.hit  { color: var(--good); }
+.w.miss { background: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+.w.add  { background: var(--focus-bg); color: var(--focus); font-style: italic; }
+
+/* --- Прогресс ------------------------------------------------------------- */
+
+.progress {
+  height: 5px;
+  background: var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.6rem 0 1.8rem;
+}
+.progress > i { display: block; height: 100%; background: var(--accent); transition: width 0.3s; }
+
+.tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 620;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.45rem;
+  border-radius: 3px;
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  color: var(--ink-faint);
+}
+.tag.lvl { color: var(--accent); border-color: var(--accent-dim); }
+
+/* --- Таблицы -------------------------------------------------------------- */
+
+.table-scroll { overflow-x: auto; margin: 1.2rem 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 620; font-size: 0.76rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-faint); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* --- Подвал урока --------------------------------------------------------- */
+
+.lesson-nav {
+  margin-top: 4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  font-family: var(--sans);
+  color: var(--ink-faint);
+}
+.lesson-nav a { display: inline-block; margin-right: 1.2rem; }
+
+.ask-teacher {
+  margin-top: 2.2rem;
+  padding: 1rem 1.2rem;
+  border: 1px dashed var(--accent-dim);
+  border-radius: 8px;
+  font-size: 0.93rem;
+  font-family: var(--sans);
+  color: var(--ink-soft);
+  background: var(--paper-warm);
+}
+.ask-teacher strong { color: var(--accent); }
+
+/* --- Печать --------------------------------------------------------------- */
+
+@media print {
+  :root { --paper: #fff; --paper-warm: #fff; --ink: #000; }
+  body { padding: 0; font-size: 11pt; }
+  .btn, .btn-row, .no-print, .progress { display: none !important; }
+  .aside { position: static; width: auto; }
+  a { color: #000; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #555; }
+  h2 { page-break-after: avoid; }
+  .card, .callout { page-break-inside: avoid; }
+}

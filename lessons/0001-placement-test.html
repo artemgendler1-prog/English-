@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 1 — Где ты на самом деле</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<main id="intro">
+  <p class="eyebrow">Урок 01 · Диагностика</p>
+  <h1>Где ты на самом деле</h1>
+  <p class="subtitle">Двадцать минут, которые определят весь дальнейший курс.</p>
+
+  <p>Ты сказал: «понимаю с субтитрами, без них теряюсь». Это самая частая формулировка
+  и самая бесполезная — она не говорит, <em>что именно</em> ломается. Субтитры чинят
+  сразу три разные поломки, и пока мы не знаем, какая твоя, любой урок будет стрельбой
+  наугад.</p>
+
+  <p>Поломок обычно три:</p>
+
+  <div class="card">
+    <p><strong>1. Ты не знаешь слова.</strong> Тогда и в тексте бы не понял. Лечится словарём.</p>
+    <p><strong>2. Ты знаешь слова, но не узнаёшь их на слух.</strong> В тексте
+    <span class="en">what are you doing</span> очевидно. В речи это
+    <span class="en">whaddaya doin'</span> — четыре слова слиплись в одно, и мозг не находит
+    их в словаре. Лечится <em>только</em> тренировкой декодирования.</p>
+    <p><strong>3. Ты узнаёшь слова, но слишком медленно.</strong> Пока переводишь первую
+    фразу, вторая уже прошла. Лечится скоростью, а не словарём.</p>
+  </div>
+
+  <p>Этот тест разводит их по разным углам. Он не выдаст один «уровень B1» — он выдаст
+  <strong>отдельную оценку по каждому навыку</strong>. Разрыв между ними и есть диагноз.</p>
+
+  <div class="aside">
+    Оценки даются по шкале CEFR (A1–C2) — той же, что в европейских языковых сертификатах.
+    Дескрипторы взяты из
+    <a href="https://www.coe.int/en/web/common-european-framework-reference-languages/table-2-cefr-3.3-common-reference-levels-self-assessment-grid" target="_blank" rel="noopener">официальной таблицы самооценки Совета Европы</a>.
+  </div>
+
+  <h2>Как проходить</h2>
+
+  <ul>
+    <li><strong>Надень наушники.</strong> Половина теста — на слух.</li>
+    <li><strong>Не подглядывай и не гугли.</strong> Завышенный результат = слишком сложные
+      уроки = ты бросишь через неделю. Это единственный тест, который выгодно провалить честно.</li>
+    <li><strong>Не знаешь — отвечай наугад и иди дальше.</strong> Промахи здесь ценнее попаданий:
+      именно из них я построю следующие уроки.</li>
+    <li><strong>Один проход, без пауз.</strong> Двадцать минут.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Про голос.</strong> Аудио озвучивает синтезатор твоего браузера, а не живой человек.
+    Чтобы он звучал как беглая американская речь, фразы записаны «как слышится»:
+    <span class="en">whaddaya</span>, <span class="en">musta</span>, <span class="en">didja</span>.
+    Это не опечатки — это ровно то, что реально произносит носитель.
+    В конце каждого задания будет ссылка на <a href="https://youglish.com/" target="_blank" rel="noopener">YouGlish</a>,
+    где ту же фразу можно услышать у настоящих людей.
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary big" id="start" type="button">Начать тест</button>
+  </div>
+  <p id="tts-warn"></p>
+</main>
+
+<main id="stage" hidden></main>
+
+<main id="report" hidden></main>
+
+<script src="../assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* =======================================================================
+     СЕКЦИЯ A — Диктант.
+     Главный диагностический инструмент. Поле say — редуцированная
+     орфография (её произносит синтезатор), expect — нормальная запись,
+     которую должен восстановить ученик.
+     ======================================================================= */
+
+  var DICTATION = [
+    {
+      id: 'd1', type: 'dictation', level: 'A2', tags: ['contraction'],
+      say: "I'll call you back in a minute.",
+      expect: "I'll call you back in a minute",
+      accept: ["I will call you back in a minute"],
+      note: "Разминка. Здесь почти ничего не редуцировано — если сорвалось здесь, проблема в скорости, а не в связной речи."
+    },
+    {
+      id: 'd2', type: 'dictation', level: 'A2/B1', tags: ['reduction', 'assimilation'],
+      say: "Whaddaya doin' this weekend?",
+      expect: "what are you doing this weekend",
+      accept: ["whatcha doing this weekend", "what you doing this weekend"],
+      note: "<b>what are you</b> → <span class='en'>whaddaya</span>. Три слова схлопываются в два слога, а <span class='ipa'>t</span> между гласными становится похожим на русское <span class='ipa'>д</span>. Это называется <em>flapping</em> — самая частая причина, по которой американская речь звучит неразборчиво."
+    },
+    {
+      id: 'd3', type: 'dictation', level: 'B1', tags: ['reduction', 'elision', 'perfect'],
+      say: "You shoulda told me sooner.",
+      expect: "you should have told me sooner",
+      accept: ["you should've told me sooner"],
+      note: "<b>should have</b> → <span class='en'>shoulda</span>. Слово <span class='en'>have</span> исчезает целиком. Отсюда же <span class='en'>coulda</span>, <span class='en'>woulda</span>, <span class='en'>musta</span> — запомни как семью."
+    },
+    {
+      id: 'd4', type: 'dictation', level: 'B1', tags: ['reduction', 'linking'],
+      say: "He's got a lotta work to get through before Friday.",
+      expect: "he's got a lot of work to get through before Friday",
+      accept: ["he has got a lot of work to get through before Friday"],
+      note: "<b>a lot of</b> → <span class='en'>a lotta</span>. Предлог <span class='en'>of</span> в беглой речи почти всегда теряет согласный и превращается в нейтральный <span class='ipa'>ə</span>."
+    },
+    {
+      id: 'd5', type: 'dictation', level: 'B2', tags: ['reduction', 'elision'],
+      say: "I dunno what she's talkin' about, honestly.",
+      expect: "I don't know what she's talking about honestly",
+      accept: ["I do not know what she is talking about honestly"],
+      note: "<b>don't know</b> → <span class='en'>dunno</span>, а окончание <span class='en'>-ing</span> становится <span class='en'>-in'</span>. В разговорной американской речи это не небрежность, а норма."
+    },
+    {
+      id: 'd6', type: 'dictation', level: 'B2', tags: ['assimilation', 'reduction'],
+      say: "Couldja gimme a hand with this for a sec?",
+      expect: "could you give me a hand with this for a second",
+      accept: ["could you give me a hand with this for a sec"],
+      note: "<b>could you</b> → <span class='en'>couldja</span>: звуки <span class='ipa'>d</span> и <span class='ipa'>j</span> сливаются в один. То же в <span class='en'>didja</span>, <span class='en'>wouldja</span>. И <b>give me</b> → <span class='en'>gimme</span>."
+    },
+    {
+      id: 'd7', type: 'dictation', level: 'B2/C1', tags: ['reduction', 'elision', 'perfect'],
+      say: "It musta been aroun' midnight when they showed up.",
+      expect: "it must have been around midnight when they showed up",
+      accept: ["it must've been around midnight when they showed up"],
+      note: "Два процесса сразу: <b>must have</b> → <span class='en'>musta</span> и выпадение конечного <span class='ipa'>d</span> в <span class='en'>around</span>. Конечные <span class='ipa'>t</span> и <span class='ipa'>d</span> перед согласным пропадают почти всегда."
+    },
+    {
+      id: 'd8', type: 'dictation', level: 'C1', tags: ['reduction', 'elision', 'conditional'],
+      say: "I'd've gone if they'd asked me sooner.",
+      expect: "I would have gone if they had asked me sooner",
+      accept: ["I'd have gone if they had asked me sooner", "I would've gone if they'd asked me sooner"],
+      note: "Предел сжатия: <b>I would have</b> ужимается до одного слога <span class='en'>I'd've</span>. Услышать это можно, только если заранее знаешь, что такая форма существует."
+    }
+  ];
+
+  /* =======================================================================
+     СЕКЦИЯ B — Декодирование редукций.
+     Слышишь сжатую форму, выбираешь, какие слова прозвучали.
+     ======================================================================= */
+
+  var REDUCTIONS = [
+    {
+      id: 'r1', type: 'choice', kind: 'reduction', level: 'B1', tags: ['reduction'],
+      eyebrow: 'Что прозвучало',
+      say: "I'ma grab a coffee.",
+      prompt: 'Прослушай и выбери, какие слова были сказаны.',
+      options: [
+        "I'm allowed to get coffee",
+        "I'm going to get coffee",
+        "I'm about to get coffee",
+        "I made you get coffee"
+      ],
+      answer: 1,
+      note: "<span class='en'>I'ma</span> = <b>I'm going to</b>. Сжатие настолько сильное, что от <span class='en'>going to</span> не остаётся ни одного согласного. Крайне частая форма в американских сериалах."
+    },
+    {
+      id: 'r2', type: 'choice', kind: 'reduction', level: 'B1', tags: ['assimilation'],
+      eyebrow: 'Что прозвучало',
+      say: "Didja see what he did?",
+      prompt: 'Прослушай и выбери, какие слова были сказаны.',
+      options: [
+        "Do you know what he did",
+        "Does he see what you did",
+        "Did you see what he did",
+        "Did he say what you did"
+      ],
+      answer: 2,
+      note: "<span class='en'>didja</span> = <b>did you</b>. Ассимиляция: <span class='ipa'>d</span> + <span class='ipa'>j</span> → <span class='ipa'>dʒ</span>, как в слове <span class='en'>jam</span>."
+    },
+    {
+      id: 'r3', type: 'choice', kind: 'reduction', level: 'B1/B2', tags: ['reduction'],
+      eyebrow: 'Что прозвучало',
+      say: "Whaddaya want me to say?",
+      prompt: 'Прослушай и выбери, какие слова были сказаны.',
+      options: [
+        "What did you want him to say",
+        "What are you wanting me to say",
+        "Why do you want me to say",
+        "What do you want me to say"
+      ],
+      answer: 3,
+      note: "<span class='en'>whaddaya</span> покрывает и <b>what do you</b>, и <b>what are you</b> — различить можно только по глаголу дальше. Здесь <span class='en'>want</span> без <span class='en'>-ing</span>, значит <b>do</b>."
+    },
+    {
+      id: 'r4', type: 'choice', kind: 'reduction', level: 'B2', tags: ['reduction', 'perfect'],
+      eyebrow: 'Что прозвучало',
+      say: "He musta left a while ago.",
+      prompt: 'Прослушай и выбери, какие слова были сказаны.',
+      options: [
+        "He must have left a while ago",
+        "He may have left a while ago",
+        "He had to leave a while ago",
+        "He must be leaving in a while"
+      ],
+      answer: 0,
+      note: "Разница между <span class='en'>musta</span> и <span class='en'>maya</span> — один звук в безударном слоге. Смысл при этом противоположный: уверенность против догадки."
+    },
+    {
+      id: 'r5', type: 'choice', kind: 'reduction', level: 'B2', tags: ['reduction', 'elision'],
+      eyebrow: 'Что прозвучало',
+      say: "It's gonna hafta wait till Monday.",
+      prompt: 'Прослушай и выбери, какие слова были сказаны.',
+      options: [
+        "It has got to have a wait",
+        "It is good to have it waiting",
+        "It is going to have to wait",
+        "It is going to halve the wait"
+      ],
+      answer: 2,
+      note: "<span class='en'>gonna</span> = <b>going to</b>, <span class='en'>hafta</span> = <b>have to</b>. Два самых частых сжатия английского языка, и они постоянно идут парой."
+    }
+  ];
+
+  /* =======================================================================
+     СЕКЦИЯ C — Разговорная лексика.
+     Не академические слова, а те, что реально звучат в сериалах.
+     ======================================================================= */
+
+  var VOCAB = [
+    {
+      id: 'v1', type: 'choice', kind: 'vocab', level: 'B1', tags: ['vocab'],
+      eyebrow: 'Значение',
+      text: "That whole place felt kind of <b>sketchy</b>, so we left.",
+      prompt: 'Что значит выделенное слово?',
+      options: [
+        "generous with money and time",
+        "suspicious and not quite safe",
+        "skilled at drawing and painting",
+        "exhausted after a long day"
+      ],
+      answer: 1,
+      note: "<span class='en'>sketchy</span> — «подозрительный, стрёмный». Одно из тех слов, которых нет в учебниках, но которые звучат в каждом втором диалоге."
+    },
+    {
+      id: 'v2', type: 'choice', kind: 'vocab', level: 'B1', tags: ['vocab', 'phrasal'],
+      eyebrow: 'Значение',
+      text: "He <b>bailed</b> on us at the last minute.",
+      prompt: 'Что значит выделенное слово?',
+      options: [
+        "arrived far earlier than planned",
+        "argued loudly about the plan",
+        "cancelled and did not show",
+        "paid for everyone that evening"
+      ],
+      answer: 2,
+      note: "<span class='en'>to bail on someone</span> — «слиться, кинуть». Буквальное значение (внести залог) в разговоре почти не встречается."
+    },
+    {
+      id: 'v3', type: 'choice', kind: 'vocab', level: 'B2', tags: ['vocab'],
+      eyebrow: 'Значение',
+      text: "I had a <b>hunch</b> she wasn't telling the truth.",
+      prompt: 'Что значит выделенное слово?',
+      options: [
+        "a feeling without solid proof",
+        "a written record of events",
+        "a formal accusation of crime",
+        "a sudden pain in the back"
+      ],
+      answer: 0,
+      note: "<span class='en'>a hunch</span> — «предчувствие, интуиция». У слова есть и физическое значение (сутулиться), но в диалогах почти всегда это догадка."
+    },
+    {
+      id: 'v4', type: 'choice', kind: 'vocab', level: 'B2', tags: ['vocab'],
+      eyebrow: 'Значение',
+      text: "She was pretty <b>blunt</b> about what she thought.",
+      prompt: 'Что значит выделенное слово?',
+      options: [
+        "cheerful about it despite the news",
+        "silent for most of the conversation",
+        "vague and very hard to follow",
+        "direct to the point of rudeness"
+      ],
+      answer: 3,
+      note: "<span class='en'>blunt</span> — «прямолинейный, режущий правду». Заметь: сюжетообразующая черта половины героев американских сериалов."
+    },
+    {
+      id: 'v5', type: 'choice', kind: 'vocab', level: 'B2', tags: ['vocab', 'phrasal'],
+      eyebrow: 'Значение',
+      text: "That guy totally <b>creeps me out</b>.",
+      prompt: 'Что значит выделенное выражение?',
+      options: [
+        "borrows money and never returns",
+        "makes me uneasy and scared",
+        "moves slowly toward the door",
+        "makes me laugh every time"
+      ],
+      answer: 1,
+      note: "<span class='en'>to creep someone out</span> — «жутко напрягать, вызывать мурашки». Фразовый глагол, который невозможно вывести из значений частей."
+    },
+    {
+      id: 'v6', type: 'choice', kind: 'vocab', level: 'B2/C1', tags: ['vocab'],
+      eyebrow: 'Значение',
+      text: "She's got a real <b>knack</b> for this kind of thing.",
+      prompt: 'Что значит выделенное слово?',
+      options: [
+        "a formal licence to do something",
+        "a bad habit picked up recently",
+        "a strong dislike of doing something",
+        "a natural talent for doing something"
+      ],
+      answer: 3,
+      note: "<span class='en'>a knack</span> — «врождённая сноровка». Начальное <span class='ipa'>k</span> не произносится, как в <span class='en'>knife</span> и <span class='en'>know</span>."
+    }
+  ];
+
+  /* =======================================================================
+     СЕКЦИЯ D — Идиомы и фразовые глаголы.
+     Именно на них рассыпается понимание фильмов: все слова знакомые,
+     а смысл фразы другой.
+     ======================================================================= */
+
+  var IDIOMS = [
+    {
+      id: 'i1', type: 'choice', kind: 'idiom', level: 'B1', tags: ['idiom'],
+      eyebrow: 'Идиома',
+      text: "Alright, let's <b>call it a day</b>.",
+      prompt: 'Что имеется в виду?',
+      options: [
+        "wait until tomorrow to decide",
+        "meet again later this evening",
+        "stop working and finish here",
+        "name the day after him"
+      ],
+      answer: 2,
+      note: "<span class='en'>call it a day</span> — «на сегодня хватит». Ничего общего со словом «звонить»."
+    },
+    {
+      id: 'i2', type: 'choice', kind: 'idiom', level: 'B2', tags: ['idiom'],
+      eyebrow: 'Идиома',
+      text: "<b>Off the top of my head</b>, maybe twenty or so.",
+      prompt: 'Что имеется в виду?',
+      options: [
+        "after carefully counting them all",
+        "according to the official record",
+        "including everything except the tax",
+        "without checking, from rough memory"
+      ],
+      answer: 3,
+      note: "<span class='en'>off the top of my head</span> — «навскидку, не проверяя». Дежурная фраза, когда просят число, а точного ответа нет."
+    },
+    {
+      id: 'i3', type: 'choice', kind: 'idiom', level: 'B2', tags: ['idiom'],
+      eyebrow: 'Идиома',
+      text: "He completely <b>threw me under the bus</b> in there.",
+      prompt: 'Что имеется в виду?',
+      options: [
+        "blamed me to protect himself",
+        "pushed me toward a promotion",
+        "helped me out of trouble",
+        "gave me a ride home"
+      ],
+      answer: 0,
+      note: "<span class='en'>throw someone under the bus</span> — «подставить, свалить вину». Практически обязательная фраза в любом офисном или политическом сюжете."
+    },
+    {
+      id: 'i4', type: 'choice', kind: 'idiom', level: 'B2', tags: ['idiom'],
+      eyebrow: 'Идиома',
+      text: "Sorry — can I <b>take a rain check</b> on that?",
+      prompt: 'Что имеется в виду?',
+      options: [
+        "check the weather before going",
+        "postpone this to another time",
+        "borrow an umbrella from you",
+        "get my money back today"
+      ],
+      answer: 1,
+      note: "<span class='en'>take a rain check</span> — «давай в другой раз». Вежливый отказ, а не разговор о погоде."
+    },
+    {
+      id: 'i5', type: 'choice', kind: 'idiom', level: 'B1/B2', tags: ['idiom', 'phrasal'],
+      eyebrow: 'Идиома',
+      text: "You're not gonna <b>get away with</b> this.",
+      prompt: 'Что имеется в виду?',
+      options: [
+        "travel far away with someone",
+        "give it back to them",
+        "leave the country very soon",
+        "avoid punishment for doing it"
+      ],
+      answer: 3,
+      note: "<span class='en'>get away with something</span> — «выйти сухим из воды». Один из самых частых фразовых глаголов в криминальных сюжетах."
+    }
+  ];
+
+  /* =======================================================================
+     СЕКЦИЯ E — Говорение.
+     Первое задание проверяет разборчивость, второе — беглость.
+     ======================================================================= */
+
+  var SPEAKING = [
+    {
+      id: 's1', type: 'speak', level: 'B1', tags: ['pronunciation'],
+      prompt: 'Произнеси эту фразу вслух в обычном разговорном темпе. ' +
+              'Проверяем не акцент, а <b>разборчивость</b>: поймёт ли тебя машина, ' +
+              'обученная на речи носителей.',
+      target: "I think this thing is really worth watching",
+      seconds: 20
+    },
+    {
+      id: 's2', type: 'speak', level: '—', tags: ['fluency'],
+      prompt: 'А теперь свободно, около 45 секунд:<br><br>' +
+              '<b>Describe the last film or series you watched. What was it about, ' +
+              'and did you actually like it?</b><br><br>' +
+              'Не готовься и не пиши заранее — говори как получится. Паузы, ошибки и ' +
+              '«эээ» здесь полезны: по ним видно, где именно спотыкается речь.',
+      seconds: 50
+    }
+  ];
+
+  var ALL = DICTATION.concat(REDUCTIONS, VOCAB, IDIOMS, SPEAKING);
+
+  /* =======================================================================
+     Запуск
+     ======================================================================= */
+
+  if (!EN.tts.supported()) {
+    document.getElementById('tts-warn').innerHTML =
+      '<span class="feedback no" style="display:block">В этом браузере нет синтеза речи, ' +
+      'аудиозадания не прозвучат. Открой тест в Chrome, Edge или Safari.</span>';
+  }
+
+  document.getElementById('start').addEventListener('click', function () {
+    document.getElementById('intro').hidden = true;
+    var stage = document.getElementById('stage');
+    stage.hidden = false;
+    window.scrollTo(0, 0);
+
+    EN.run({
+      host: stage,
+      items: ALL,
+      onFinish: function (results) { report(results); }
+    });
+  });
+
+  /* =======================================================================
+     Отчёт
+     ======================================================================= */
+
+  function pick(results, types) {
+    return results.filter(function (r) { return types.indexOf(r.type) >= 0; });
+  }
+
+  function report(results) {
+    document.getElementById('stage').hidden = true;
+    var host = document.getElementById('report');
+    host.hidden = false;
+    host.className = 'wide';
+    window.scrollTo(0, 0);
+
+    var dict = pick(results, ['dictation']);
+    var red  = pick(results, ['reduction']);
+    var voc  = pick(results, ['vocab']);
+    var idi  = pick(results, ['idiom']);
+    var spk  = results.filter(function (r) { return r.type === 'speak'; });
+
+    function rateOf(list) {
+      if (!list.length) return 0;
+      var s = list.reduce(function (a, r) {
+        return a + (r.ratio != null ? r.ratio : (r.correct ? 1 : 0));
+      }, 0);
+      return s / list.length;
+    }
+
+    var rDict = rateOf(dict);
+    var rRed  = rateOf(red);
+    var rVoc  = rateOf(voc);
+    var rIdi  = rateOf(idi);
+    // Аудирование — это диктант (восстановление формы) плюс декодирование редукций.
+    var rListen = rDict * 0.7 + rRed * 0.3;
+
+    var s1 = spk.filter(function (r) { return r.id === 's1'; })[0] || {};
+    var s2 = spk.filter(function (r) { return r.id === 's2'; })[0] || {};
+    var wpm = (s2.words && s2.seconds) ? Math.round(s2.words / (s2.seconds / 60)) : null;
+
+    var levels = {
+      listening: EN.cefr(rListen),
+      vocabulary: EN.cefr(rVoc),
+      idioms: EN.cefr(rIdi),
+      reductions: EN.cefr(rRed)
+    };
+
+    var placement = {
+      date: new Date().toISOString(),
+      levels: levels,
+      scores: {
+        dictation: +rDict.toFixed(3),
+        reductions: +rRed.toFixed(3),
+        listening: +rListen.toFixed(3),
+        vocabulary: +rVoc.toFixed(3),
+        idioms: +rIdi.toFixed(3),
+        intelligibility: s1.ratio != null ? +s1.ratio.toFixed(3) : null,
+        wordsPerMinute: wpm
+      },
+      speechSample: s2.transcript || '',
+      speechSeconds: s2.seconds || 0
+    };
+
+    EN.store.setPlacement(placement);
+    EN.store.addSession({
+      lesson: '0001-placement-test',
+      date: new Date().toISOString(),
+      score: +rListen.toFixed(3),
+      items: results
+    });
+    // Всё, что не далось, ставим в очередь интервальных повторений.
+    results.forEach(function (r) {
+      if (r.correct === false) EN.srs.review(r.id, 1, { tags: r.tags, text: r.expected || r.say || '' });
+      else if (r.correct === true) EN.srs.review(r.id, 4, { tags: r.tags, text: r.expected || r.say || '' });
+    });
+
+    /* --- вёрстка отчёта --- */
+
+    var h = [];
+    h.push('<p class="eyebrow">Урок 01 · Результат</p>');
+    h.push('<h1>Вот где ты на самом деле</h1>');
+    h.push('<p class="subtitle">Не одна цифра, а профиль. Читай разрывы между строками.</p>');
+
+    h.push('<div class="table-scroll"><table><thead><tr>' +
+      '<th>Навык</th><th>Результат</th><th>Уровень</th><th>Что это значит</th>' +
+      '</tr></thead><tbody>');
+
+    function row(name, ratio, lvl, meaning) {
+      h.push('<tr><td><b>' + name + '</b></td><td>' + Math.round(ratio * 100) + '%</td>' +
+        '<td><span class="tag lvl">' + lvl + '</span></td><td>' + meaning + '</td></tr>');
+    }
+
+    row('Аудирование', rListen, levels.listening,
+      'Способность вытащить знакомые слова из слитного потока речи.');
+    row('Связная речь', rRed, levels.reductions,
+      'Узнавание сжатых форм: <span class="en">gonna</span>, <span class="en">musta</span>, <span class="en">didja</span>.');
+    row('Словарь', rVoc, levels.vocabulary,
+      'Разговорная лексика, та, что звучит в сериалах, а не в учебниках.');
+    row('Идиомы', rIdi, levels.idioms,
+      'Фразы, где все слова знакомы, а смысл другой.');
+    h.push('</tbody></table></div>');
+
+    /* Диагноз: сравниваем чтение/словарь со слухом. */
+    var gap = rVoc - rListen;
+    h.push('<h2>Диагноз</h2>');
+
+    if (gap > 0.18) {
+      h.push('<div class="callout"><strong>Классический разрыв: словарь опережает слух.</strong> ' +
+        'Ты знаешь слова — ты просто не узнаёшь их, когда они произнесены. ' +
+        'Это <em>хорошая</em> новость: учить новую лексику тебе почти не нужно, нужно научиться ' +
+        'её слышать. Именно этот навык тренируется быстрее всего — недели, а не годы. ' +
+        'Весь курс пойдёт в декодирование связной речи.</div>');
+    } else if (gap < -0.18) {
+      h.push('<div class="callout"><strong>Обратный разрыв: слух опережает словарь.</strong> ' +
+        'Звуковую форму ты ловишь, но не всегда знаешь, что означает пойманное. ' +
+        'Значит упор — на разговорную лексику и идиоматику, а не на фонетику.</div>');
+    } else {
+      h.push('<div class="callout"><strong>Навыки идут вровень.</strong> ' +
+        'Растим их параллельно: каждый урок — новая лексика внутри аудиозадания, ' +
+        'чтобы слово сразу закреплялось в звучащей форме, а не в письменной.</div>');
+    }
+
+    /* Речь */
+    h.push('<h2>Речь</h2>');
+    if (s1.ratio != null) {
+      h.push('<p><b>Разборчивость: ' + Math.round(s1.ratio * 100) + '%.</b> ' +
+        (s1.ratio >= 0.8
+          ? 'Тебя понимают. Дальше работаем не над звуками, а над темпом и естественностью.'
+          : 'Часть слов не распозналась. Разберём, какие именно звуки съедаются — это чинится точечно.') +
+        '</p>');
+    } else {
+      h.push('<p>Задание на произношение выполнено текстом — устную часть проверим в следующий раз.</p>');
+    }
+
+    if (wpm) {
+      h.push('<p><b>Темп: ' + wpm + ' слов в минуту.</b> ' +
+        (wpm >= 120 ? 'Это разговорный темп носителя. Беглость есть.'
+          : wpm >= 80 ? 'Чуть медленнее разговорного (у носителей 120–150). Норма для B1–B2: мысль формулируется, но с задержкой.'
+            : 'Сильно медленнее разговорного. Скорее всего, ты собираешь фразу по словам вместо готовых блоков — это чинится заучиванием целых конструкций, а не отдельных слов.') +
+        '</p>');
+    }
+
+    if (s2.transcript) {
+      h.push('<div class="card"><p class="eyebrow">Расшифровка твоей речи</p>' +
+        '<p class="en">' + EN.esc(s2.transcript) + '</p>' +
+        '<p style="font-size:.88rem;color:var(--ink-faint);margin:0">Распознавание неидеально — ' +
+        'часть искажений на его совести. Разберём вместе.</p></div>');
+    }
+
+    /* Ошибки */
+    var wrong = results.filter(function (r) { return r.correct === false; });
+    h.push('<h2>Что не далось (' + wrong.length + ')</h2>');
+    if (!wrong.length) {
+      h.push('<p>Ни одной ошибки. Тест оказался слишком лёгким — следующий будет заметно жёстче.</p>');
+    } else {
+      h.push('<div class="table-scroll"><table><thead><tr><th>Задание</th><th>Ты</th><th>Верно</th><th>Механизм</th></tr></thead><tbody>');
+      wrong.forEach(function (r) {
+        h.push('<tr><td>' + EN.esc(r.say || r.prompt || r.id) + '</td>' +
+          '<td style="color:var(--bad)">' + EN.esc(r.given || '—') + '</td>' +
+          '<td style="color:var(--good)">' + EN.esc(r.expected || '—') + '</td>' +
+          '<td>' + (r.tags || []).map(function (t) { return '<span class="tag">' + t + '</span>'; }).join(' ') + '</td></tr>');
+      });
+      h.push('</tbody></table></div>');
+      h.push('<p>Каждая строка уже поставлена в очередь повторения и вернётся к тебе через ' +
+        'растущие промежутки — сегодня, через день, через три, через неделю.</p>');
+    }
+
+    /* Экспорт */
+    h.push('<h2>Последний шаг — обязательный</h2>');
+    h.push('<p>Результат сейчас лежит только в этом браузере. Чтобы я построил на нём ' +
+      'следующие уроки, его нужно передать мне: нажми кнопку, затем вставь скопированное ' +
+      'в чат с Клодом одним сообщением.</p>');
+    h.push('<div class="btn-row">' +
+      '<button class="btn primary big" id="copy" type="button">Скопировать результат</button>' +
+      '<button class="btn" id="dl" type="button">Скачать файлом</button>' +
+      '<a class="btn" href="../app/index.html">Открыть панель курса</a>' +
+      '</div>');
+    h.push('<p id="copied" style="color:var(--good);font-weight:600"></p>');
+    h.push('<textarea id="json" readonly style="min-height:9rem;font-family:var(--mono);font-size:.78rem"></textarea>');
+
+    h.push('<h2>Что почитать до следующего урока</h2>');
+    h.push('<p><strong>Главный источник:</strong> ' +
+      '<a href="https://rachelsenglish.com/learn-english-with-tv-and-movies/" target="_blank" rel="noopener">Rachel\'s English — Learn English with Movies and TV</a>. ' +
+      'Рэйчел пятнадцать лет разбирает американское произношение по звукам и показывает ровно то, ' +
+      'что ты сейчас проходил: как носители связывают слова и что именно выпадает. ' +
+      'Посмотри один разбор сцены — этого хватит, чтобы механизм щёлкнул.</p>');
+    h.push('<p>Дополнительно — открой <a href="https://youglish.com/pronounce/what%20are%20you%20doing/english/us" target="_blank" rel="noopener">YouGlish на фразе <span class="en">what are you doing</span></a> ' +
+      'и прослушай подряд десять живых примеров. Обрати внимание, что почти никто не произносит её по словам.</p>');
+
+    h.push('<div class="ask-teacher"><strong>Я твой преподаватель, а не тест.</strong> ' +
+      'Всё, что осталось непонятным в этом отчёте, — спроси прямо в чате. ' +
+      '«Почему я не расслышал d7?», «что такое flapping?», «сделай мне урок только по <span class="en">-a</span>-формам» — ' +
+      'нормальные запросы. Отчёт мёртвый, разговор живой.</div>');
+
+    h.push('<nav class="lesson-nav">' +
+      '<a href="../app/index.html">Панель курса</a>' +
+      '<a href="../reference/connected-speech-decoder.html">Декодер беглой речи</a>' +
+      '<a href="../GLOSSARY.md">Глоссарий</a>' +
+      '<a href="../MISSION.md">Цель курса</a>' +
+      '<a href="../RESOURCES.md">Источники</a>' +
+      '</nav>');
+
+    host.innerHTML = h.join('');
+
+    var json = EN.store.exportJSON();
+    document.getElementById('json').value = json;
+
+    document.getElementById('copy').addEventListener('click', function () {
+      var ta = document.getElementById('json');
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      if (navigator.clipboard) { navigator.clipboard.writeText(json).then(function () {}, function () {}); ok = true; }
+      document.getElementById('copied').textContent = ok
+        ? 'Скопировано. Вставь это в чат с Клодом.'
+        : 'Не удалось скопировать — выдели текст ниже вручную.';
+    });
+
+    document.getElementById('dl').addEventListener('click', function () {
+      var blob = new Blob([json], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'profile.json';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+  }
+})();
+</script>
+</body>
+</html>
