@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 2 — Проглоченное have</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<main id="intro">
+  <p class="eyebrow">Урок 02 · Редукция</p>
+  <h1>Проглоченное <span class="en">have</span></h1>
+  <p class="subtitle">Одна дыра, через которую утекло четыре задания из теста.</p>
+
+  <p>В тесте ты слышал знаменательные слова нормально: <span class="en">midnight</span>,
+  <span class="en">showed up</span>, <span class="en">work</span>, <span class="en">Friday</span>,
+  <span class="en">sooner</span> — всё это в твоих ответах есть. Ломалось всегда на одном:
+  на служебном глаголе, схлопнутом в один невнятный звук.</p>
+
+  <div class="card">
+    <p><strong>Что ты написал:</strong> <span class="en">it must <u>to</u> be near the midnight</span></p>
+    <p><strong>Что было сказано:</strong> <span class="en">it must <u>have</u> been around midnight</span></p>
+  </div>
+
+  <p>Это не оговорка. Ты услышал после <span class="en">must</span> короткое /ə/ — и подставил
+  ближайшее знакомое служебное слово, <span class="en">to</span>. Логично: звук похож.
+  Так же ушли <span class="en">shoulda</span> (пустой ответ),
+  <span class="en">I'd've</span> (превратилось в <span class="en">I did vegan</span>)
+  и <span class="en">hafta</span>.</p>
+
+  <h2>Почему <span class="en">have</span> исчезает</h2>
+
+  <p>В английском ударение падает на слова со смыслом. Служебные — <span class="en">have</span>,
+  <span class="en">to</span>, <span class="en">do</span>, <span class="en">of</span> — безударны
+  почти всегда, а безударный гласный в английском схлопывается в /ə/ (шва). Носитель не
+  «ленится»: он произносит ровно то, что положено. <span class="en">have</span> в этой позиции
+  и <em>должно</em> звучать как /ə/.</p>
+
+  <p>Носитель не слышит там <span class="en">have</span> — он его <strong>достраивает
+  из грамматики</strong>. Именно этому ты сейчас и научишься: не расслышать лучше,
+  а знать, что там может стоять.</p>
+
+  <div class="callout">
+    <strong>Переслушивание не помогает.</strong> На задании про <span class="en">musta</span>
+    ты нажал «прослушать» двенадцать раз и не приблизился к ответу. Так и должно быть:
+    в сигнале физически нет того, что ты ищешь. Двенадцать повторов не достанут
+    из звука то, чего в нём нет.
+  </div>
+
+  <h2>Правило, которое всё решает</h2>
+
+  <p>Проблема в том, что <span class="en">-a</span> — это <em>два разных</em> слова.
+  Звучат одинаково, значат разное:</p>
+
+  <div class="card">
+    <p><span class="en">musta, shoulda, coulda, woulda, mighta</span> → <strong>have</strong></p>
+    <p><span class="en">hafta, hasta, gotta, oughta</span> → <strong>to</strong></p>
+  </div>
+
+  <p><strong>Различай по следующему слову.</strong> Оно всегда подсказывает:</p>
+
+  <div class="card">
+    <p><span class="en">He musta <u>gone</u>.</span> → третья форма (gone, been, done, told,
+    forgotten) → было <strong>have</strong></p>
+    <p><span class="en">He hasta <u>go</u>.</span> → обычный глагол (go, be, do, tell) →
+    было <strong>to</strong></p>
+  </div>
+
+  <p>Работает, потому что за <span class="en">have</span> в перфекте <em>всегда</em> идёт
+  третья форма, а за <span class="en">to</span> — <em>всегда</em> инфинитив. Исключений нет.
+  Если поймал следующее слово — служебное восстанавливается однозначно, даже если ты
+  вообще не расслышал середину.</p>
+
+  <div class="aside">
+    <strong>Где это перестаёт работать.</strong> Правило про третью форму разводит
+    <span class="en">have</span> и <span class="en">to</span> — и только их. Оно ничего
+    не скажет про <span class="en">I'd</span>: это может быть и
+    <span class="en">I would</span>, и <span class="en">I had</span>. Их разводит уже
+    смысл фразы, а не звук. К этому вернёмся отдельным уроком.
+  </div>
+
+  <h2>Как проходить</h2>
+
+  <ul>
+    <li>Наушники. Тринадцать заданий, минут двенадцать.</li>
+    <li>Не сдавайся на пустой ответ, как на <span class="en">shoulda</span> в тесте.
+      Пиши то, что услышал, даже если уверен, что мимо: половина правильных слов
+      полезнее пустой строки.</li>
+    <li>Поймал следующее слово — считай, что поймал и служебное. Проверь по правилу.</li>
+  </ul>
+
+  <div class="btn-row">
+    <button class="btn primary big" id="start" type="button">Начать урок</button>
+  </div>
+  <p id="tts-warn"></p>
+</main>
+
+<main id="stage" hidden></main>
+
+<main id="report" hidden></main>
+
+<script src="../assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* =======================================================================
+     Задания.
+     Прогрессия: узнавание -> контраст have/to -> восстановление на диктанте.
+     Поле say — редуцированная орфография (её произносит синтезатор),
+     expect — нормальная запись, которую ученик должен восстановить.
+     ======================================================================= */
+
+  var ITEMS = [
+
+    /* --- Вход: узнать механизм в готовых вариантах ------------------- */
+    {
+      id: 'p1', type: 'choice', level: 'B1', tags: ['reduction', 'perfect'],
+      say: "You shoulda told me.",
+      prompt: 'Прослушай и выбери, что было сказано.',
+      options: [
+        'You should be telling me',
+        'You should have told me',
+        "You shouldn't have told me"
+      ],
+      answer: 1,
+      note: 'После <span class="en">shoulda</span> идёт <span class="en">told</span> — ' +
+        'третья форма. Значит, спрятано <span class="en">have</span>.'
+    },
+
+    /* --- Первое восстановление: короткая фраза, механизм один --------- */
+    {
+      id: 'p2', type: 'dictation', level: 'B1', tags: ['reduction', 'perfect'],
+      say: "I coulda done it myself.",
+      expect: 'I could have done it myself',
+      accept: ["I could've done it myself"],
+      note: '<span class="en">done</span> — третья форма, значит перед ней ' +
+        '<span class="en">have</span>. Никакого <span class="en">to</span> тут быть не может: ' +
+        '<span class="en">could to do</span> — не английский.'
+    },
+
+    {
+      id: 'p3', type: 'dictation', level: 'B1', tags: ['reduction', 'perfect'],
+      say: "She musta forgotten about it.",
+      expect: 'she must have forgotten about it',
+      accept: ["she must've forgotten about it"],
+      note: 'Тот же механизм, что провалился в тесте на ' +
+        '<span class="en">musta been around midnight</span>. Ловишь ' +
+        '<span class="en">forgotten</span> — восстанавливаешь <span class="en">have</span>.'
+    },
+
+    /* --- Контраст: тот же звук, другое слово -------------------------- */
+    {
+      id: 'p4', type: 'choice', level: 'B1/B2', tags: ['reduction', 'contrast'],
+      say: "He hasta leave early.",
+      prompt: 'Прослушай и выбери, что было сказано.',
+      options: [
+        'He must have left early',
+        'He has left early today',
+        'He has to leave early'
+      ],
+      answer: 2,
+      note: 'Здесь <span class="en">-a</span> — это <span class="en">to</span>, а не ' +
+        '<span class="en">have</span>. Подсказало следующее слово: ' +
+        '<span class="en">leave</span> — обычная форма, не <span class="en">left</span>.'
+    },
+
+    {
+      id: 'p5', type: 'choice', level: 'B1/B2', tags: ['reduction', 'contrast'],
+      say: "He musta left already.",
+      prompt: 'Прослушай и выбери, что было сказано.',
+      options: [
+        'He has to leave already',
+        'He must be leaving already',
+        'He must have left already'
+      ],
+      answer: 2,
+      note: 'Звук почти как в прошлом задании, но дальше ' +
+        '<span class="en">left</span> — третья форма. Значит ' +
+        '<span class="en">have</span>. Вот эта пара и есть весь урок.'
+    },
+
+    /* --- Восстановление продолжается, фразы длиннее ------------------- */
+    {
+      id: 'p6', type: 'dictation', level: 'B1/B2', tags: ['reduction', 'perfect'],
+      say: "We shoulda booked it earlier.",
+      expect: 'we should have booked it earlier',
+      accept: ["we should've booked it earlier"],
+      note: 'Живой оборот сожаления: <span class="en">we should have</span> — ' +
+        '«надо было». В сериалах звучит постоянно.'
+    },
+
+    /* --- Перемешивание: старое (whaddaya) плюс новое (shoulda) -------- */
+    {
+      id: 'p7', type: 'dictation', level: 'B2', tags: ['reduction', 'perfect', 'mixed'],
+      say: "Whaddaya think we shoulda done?",
+      expect: 'what do you think we should have done',
+      accept: ["what do you think we should've done"],
+      note: '<span class="en">Whaddaya</span> ты в тесте разобрал верно — но в задании ' +
+        'с вариантами выбрал <span class="en">what are you wanting</span>. ' +
+        'Здесь <span class="en">whaddaya</span> = <span class="en">what do you</span>: ' +
+        'то же схлопнутое служебное слово, только <span class="en">do</span>.'
+    },
+
+    /* --- Прямой повтор проваленного в тесте, облегчённый -------------- */
+    {
+      id: 'p8', type: 'dictation', level: 'B2', tags: ['reduction', 'perfect'],
+      say: "It musta been aroun' ten.",
+      expect: 'it must have been around ten',
+      accept: ["it must've been around ten"],
+      note: 'Это укороченный d7 — тот самый, где ты написал ' +
+        '<span class="en">must to be</span> после двенадцати прослушиваний. ' +
+        '<span class="en">been</span> — третья форма, <span class="en">to</span> перед ней ' +
+        'невозможно.'
+    },
+
+    /* --- Двойное have в одной фразе ----------------------------------- */
+    {
+      id: 'p9', type: 'choice', level: 'B2', tags: ['reduction', 'conditional'],
+      say: "They'd've helped if we'd asked.",
+      prompt: 'Прослушай и выбери, что было сказано.',
+      options: [
+        'They would be helping if we had asked',
+        'They would have helped if we had asked',
+        'They should have helped if we would ask'
+      ],
+      answer: 1,
+      note: '<span class="en">They\'d\'ve</span> — это два схлопнутых слова подряд: ' +
+        '<span class="en">would</span> + <span class="en">have</span>. Звучит как один слог. ' +
+        'Опора всё та же: дальше <span class="en">helped</span>.'
+    },
+
+    {
+      id: 'p10', type: 'dictation', level: 'B2', tags: ['reduction', 'perfect'],
+      say: "You coulda hurt yourself.",
+      expect: 'you could have hurt yourself',
+      accept: ["you could've hurt yourself"],
+      note: '<span class="en">hurt</span> не меняет форму — подсказки в окончании нет. ' +
+        'Опора здесь грамматическая: после <span class="en">could</span> инфинитив идёт ' +
+        'без <span class="en">to</span>, значит /ə/ — это <span class="en">have</span>.'
+    },
+
+    {
+      id: 'p11', type: 'dictation', level: 'B2', tags: ['reduction', 'contrast'],
+      say: "I hafta finish this tonight.",
+      expect: 'I have to finish this tonight',
+      note: 'А здесь наоборот: <span class="en">finish</span> — обычная форма, значит ' +
+        '<span class="en">hafta</span> = <span class="en">have to</span>. ' +
+        'В тесте ты на этом же <span class="en">hafta</span> собрал ' +
+        '<span class="en">has got to have a wait</span>.'
+    },
+
+    /* --- Целевая трудность: то, что провалилось в ноль ---------------- */
+    {
+      id: 'p12', type: 'dictation', level: 'B2/C1', tags: ['reduction', 'conditional'],
+      say: "I'd've said somethin' if I'd known.",
+      expect: 'I would have said something if I had known',
+      accept: ["I would've said something if I'd known"],
+      note: 'В тесте эта конструкция дала <span class="en">I did vegan</span>. ' +
+        'Разбирай по опорам: <span class="en">said</span> и <span class="en">known</span> — ' +
+        'третьи формы, перед каждой было проглоченное служебное слово.'
+    },
+
+    {
+      id: 'p13', type: 'dictation', level: 'C1', tags: ['reduction', 'perfect'],
+      say: "There musta been a hunnerd people there.",
+      expect: 'there must have been a hundred people there',
+      accept: ["there must've been a hundred people there"],
+      note: 'Финальное — с двумя редукциями сразу: <span class="en">musta</span> и ' +
+        '<span class="en">hunnerd</span> (так реально звучит ' +
+        '<span class="en">hundred</span> в беглой речи).'
+    }
+  ];
+
+  /* =======================================================================
+     Запуск
+     ======================================================================= */
+
+  if (!EN.tts.supported()) {
+    document.getElementById('tts-warn').innerHTML =
+      '<span class="feedback no" style="display:block">В этом браузере нет синтеза речи, ' +
+      'аудиозадания не прозвучат. Открой урок в Chrome, Edge или Safari.</span>';
+  }
+
+  document.getElementById('start').addEventListener('click', function () {
+    document.getElementById('intro').hidden = true;
+    var stage = document.getElementById('stage');
+    stage.hidden = false;
+    window.scrollTo(0, 0);
+
+    EN.run({
+      host: stage,
+      items: ITEMS,
+      onFinish: report
+    });
+  });
+
+  /* =======================================================================
+     Отчёт
+     ======================================================================= */
+
+  function report(results) {
+    var stage = document.getElementById('stage');
+    var host = document.getElementById('report');
+    stage.hidden = true;
+    host.hidden = false;
+    window.scrollTo(0, 0);
+
+    var scored = results.filter(function (r) { return r.correct != null; });
+    var hits = scored.filter(function (r) { return r.correct; }).length;
+    var ratio = scored.length ? hits / scored.length : 0;
+
+    // Отдельно — насколько закрылась дыра, ради которой писался урок.
+    var perfect = results.filter(function (r) {
+      return (r.tags || []).indexOf('perfect') >= 0 ||
+        (r.tags || []).indexOf('conditional') >= 0;
+    });
+    var perfectHits = perfect.filter(function (r) { return r.correct; }).length;
+
+    var contrast = results.filter(function (r) {
+      return (r.tags || []).indexOf('contrast') >= 0;
+    });
+    var contrastHits = contrast.filter(function (r) { return r.correct; }).length;
+
+    EN.store.addSession({
+      lesson: '0002-swallowed-have',
+      date: new Date().toISOString(),
+      score: +ratio.toFixed(3),
+      items: results
+    });
+    results.forEach(function (r) {
+      if (r.correct === false) EN.srs.review(r.id, 1, { tags: r.tags, text: r.expected || r.say || '' });
+      else if (r.correct === true) EN.srs.review(r.id, 4, { tags: r.tags, text: r.expected || r.say || '' });
+    });
+
+    var h = [];
+    h.push('<p class="eyebrow">Урок 02 · Результат</p>');
+    h.push('<h1>' + hits + ' из ' + scored.length + '</h1>');
+    h.push('<p class="subtitle">Уровень по этому навыку: <b>' +
+      EN.cefr(ratio) + '</b></p>');
+
+    h.push('<div class="card">');
+    h.push('<p><strong>Восстановление <span class="en">have</span>:</strong> ' +
+      perfectHits + ' из ' + perfect.length + ' — ровно та дыра, ' +
+      'из-за которой писался урок.</p>');
+    h.push('<p><strong>Различение <span class="en">have</span> / <span class="en">to</span>:</strong> ' +
+      contrastHits + ' из ' + contrast.length + '.</p>');
+    h.push('</div>');
+
+    var missed = results.filter(function (r) { return r.correct === false; });
+    if (missed.length) {
+      h.push('<h2>Что не далось</h2>');
+      h.push('<ul>');
+      missed.forEach(function (r) {
+        h.push('<li><span class="en">' + EN.esc(r.say || '') + '</span> → <b>' +
+          EN.esc(r.expected || '') + '</b>' +
+          (r.given ? '<br>ты написал: <span class="en">' + EN.esc(r.given) + '</span>' : '') +
+          '</li>');
+      });
+      h.push('</ul>');
+      h.push('<p>Эти фразы встанут в очередь повторений и вернутся в следующих уроках.</p>');
+    } else {
+      h.push('<h2>Всё верно</h2>');
+      h.push('<p>Механизм закрыт на тренажёре. Это ещё не значит, что он закрыт на слух ' +
+        'в живой речи — проверяется только сериалом без субтитров.</p>');
+    }
+
+    h.push('<h2>Проверь на живой речи</h2>');
+    h.push('<p>Открой <a href="' + EN.youglish('must have been') +
+      '" target="_blank" rel="noopener">YouGlish на <span class="en">must have been</span></a> ' +
+      'и прослушай подряд десять примеров. Считай, сколько раз ' +
+      '<span class="en">have</span> прозвучало полностью. Ответ тебя удивит.</p>');
+
+    h.push('<p><strong>Первоисточник:</strong> ' +
+      '<a href="https://rachelsenglish.com/learn-english-with-tv-and-movies/" target="_blank" rel="noopener">' +
+      'Rachel\'s English — Learn English with Movies and TV</a>. ' +
+      'Ищи разборы с пометкой <span class="en">reduction</span>: она разбирает ровно эти ' +
+      'схлопнутые служебные слова покадрово.</p>');
+
+    h.push('<h2>Последний шаг</h2>');
+    h.push('<p>Нажми кнопку и вставь скопированное в чат — по этому результату я соберу ' +
+      'следующий урок.</p>');
+    h.push('<div class="btn-row">' +
+      '<button class="btn primary big" id="copy" type="button">Скопировать результат</button>' +
+      '<a class="btn" href="../app/index.html">Открыть панель курса</a>' +
+      '</div>');
+    h.push('<p id="copied" style="color:var(--good);font-weight:600"></p>');
+    h.push('<textarea id="json" readonly style="min-height:9rem;font-family:var(--mono);font-size:.78rem"></textarea>');
+
+    h.push('<div class="ask-teacher"><strong>Я твой преподаватель, а не тест.</strong> ' +
+      'Не сошлось что-то в разборе — спроси в чате. ' +
+      '«Почему тут <span class="en">had</span>, а не <span class="en">would</span>?», ' +
+      '«услышал в сериале <span class="en">…</span> — разбери» — нормальные запросы.</div>');
+
+    h.push('<nav class="lesson-nav">' +
+      '<a href="../app/index.html">Панель курса</a>' +
+      '<a href="0001-placement-test.html">Тест уровня</a>' +
+      '<a href="../reference/connected-speech-decoder.html">Декодер беглой речи</a>' +
+      '<a href="../GLOSSARY.md">Глоссарий</a>' +
+      '</nav>');
+
+    host.innerHTML = h.join('');
+
+    var json = EN.store.exportJSON();
+    document.getElementById('json').value = json;
+
+    document.getElementById('copy').addEventListener('click', function () {
+      var ta = document.getElementById('json');
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      if (navigator.clipboard) { navigator.clipboard.writeText(json).then(function () {}, function () {}); ok = true; }
+      document.getElementById('copied').textContent = ok
+        ? 'Скопировано. Вставь это в чат с Клодом.'
+        : 'Не удалось скопировать — выдели текст ниже вручную.';
+    });
+  }
+})();
+</script>
+</body>
+</html>
